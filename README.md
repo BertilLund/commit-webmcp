@@ -4,6 +4,10 @@
 
 Commit is a WebMCP-native commerce operations demo. An agent can inspect store data, build a multi-step clearance proposal in isolated shadow state, receive deterministic policy feedback, and request a human-bound atomic commit. The human reviews and can edit the same change set before approval.
 
+## Live demo
+
+[commit-webmcp.pages.dev](https://commit-webmcp.pages.dev)
+
 ## What makes it WebMCP-native
 
 The app registers browser-mediated tools through `document.modelContext.registerTool()`. The tools are intentionally domain-level rather than click automation:

@@ -2,6 +2,9 @@
 
 **Git for agent actions on the web.**
 
+Live demo: https://commit-webmcp.pages.dev  
+Public source: https://github.com/BertilLund/commit-webmcp
+
 WebMCP lets agents act on websites. Commit adds the missing collaboration layer: agents stage a coherent set of operational changes in shadow state, humans review and modify the diff, deterministic policies validate it, and the approved revision commits atomically with an audit trail.
 
 ## The problem
