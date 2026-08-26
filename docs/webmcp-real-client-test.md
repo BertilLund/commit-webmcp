@@ -6,9 +6,9 @@ Deployment: https://commit-webmcp.pages.dev
 
 ## Tool discovery
 
-The browser discovered 13 `document.modelContext` tools with their schemas:
+The current monochrome production build exposes 15 `document.modelContext` tools with strict schemas:
 
-`get_store_summary`, `list_products`, `get_store_policies`, `begin_changeset`, `stage_price_change`, `stage_featured_product`, `stage_campaign`, `get_changeset`, `validate_changeset`, `request_commit`, `commit_approved_changes`, `get_commit_history`, and `reset_demo`.
+`get_store_summary`, `list_products`, `get_store_policies`, `begin_changeset`, `stage_price_change`, `stage_featured_product`, `stage_campaign`, `list_campaigns`, `get_changeset`, `validate_changeset`, `request_commit`, `commit_approved_changes`, `get_commit_history`, `begin_rollback`, and `reset_demo`.
 
 ## Executed flow
 
@@ -23,7 +23,18 @@ The browser discovered 13 `document.modelContext` tools with their schemas:
 9. Read commit history and confirmed the new audit record with actor attribution `Human approval · agent staged`.
 10. Invoked `reset_demo`; a new `get_store_summary` returned store version 12, 20 products, and no active change set.
 
-Browser development logs had zero warnings and zero errors during the completed flow.
+## Current rollback verification
+
+After the UI redesign and rollback release, the same supported Codex in-app browser completed this additional production run:
+
+1. `reset_demo` restored canonical store version 12.
+2. The client began `Rollback client test`, staged a valid $109 price, a featured placement, and campaign `Rollback verification`, then requested approval for revision 4.
+3. A human approved revision 4 in the UI. `commit_approved_changes` created `CMT_PB0DLI` and persisted the three reversible changes.
+4. The agent read commit history and called `begin_rollback` with `CMT_PB0DLI`. The app staged a separate `Rollback CMT_PB0DLI` change set at canonical version 13 with inverse price, placement, and campaign-removal actions. Nothing was live at this stage.
+5. A human approved that rollback revision in the UI. `commit_approved_changes` then created `CMT_MAR3PP`.
+6. The agent confirmed the canonical result: Aster Field Jacket was back to `$148`, `featured: false`, and `list_campaigns` returned an empty array.
+
+Browser development logs had zero warnings and zero errors during the completed flows.
 
 ## Notes
 

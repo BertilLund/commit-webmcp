@@ -12,6 +12,7 @@ const seeds = rows.map((row, index) => ({ id: `p${String(index + 1).padStart(2, 
 export const fresh = () => ({
   version: 12,
   products: structuredClone(seeds),
+  campaigns: [],
   changeset: null,
   activity: [],
   history: [{ id: 'CMT_7A92', title: 'August catalog tidy-up', actor: 'Maya Chen · Merchandising', at: '2026-08-24T10:20:00Z', changes: 3, revision: 4 }],
@@ -19,6 +20,7 @@ export const fresh = () => ({
 
 let state;
 try { state = JSON.parse(localStorage.commitDemo) || fresh(); } catch { state = fresh(); }
+if (!Array.isArray(state.campaigns)) state.campaigns = [];
 const listeners = new Set();
 const persist = () => { try { localStorage.commitDemo = JSON.stringify(state); } catch { /* demo remains usable when storage is unavailable */ } };
 const emit = () => { persist(); listeners.forEach((listener) => listener()); };
@@ -126,10 +128,34 @@ export function commitApprovedChanges() {
   if (changeset.approval.revision !== changeset.revision || changeset.approval.contentHash !== contentHash(changeset)) throw new Error('Approval is stale.');
   if (changeset.baseVersion !== state.version) throw new Error('Store changed; recreate this change set.');
   if (validateChangeset({ notify: false }).block) { emit(); throw new Error('Blocked policy result.'); }
-  changeset.changes.forEach((change) => { const product = getProduct(change.entityId); if (product && change.type === 'price') product.price = change.after.price; if (product && change.type === 'feature') product.featured = change.after.featured; });
+  changeset.changes.forEach((change) => {
+    const product = getProduct(change.entityId);
+    if (product && change.type === 'price') product.price = change.after.price;
+    if (product && change.type === 'feature') product.featured = change.after.featured;
+    if (change.type === 'campaign' && change.after.removal) state.campaigns = state.campaigns.filter((campaign) => campaign.name !== change.after.name);
+    if (change.type === 'campaign' && !change.after.removal) state.campaigns = [...state.campaigns.filter((campaign) => campaign.name !== change.after.name), { ...change.after, sourceChange: change.id }];
+  });
   state.version += 1; changeset.status = 'committed'; changeset.commit = { id: uid('cmt').toUpperCase(), at: now() };
-  state.history.unshift({ id: changeset.commit.id, title: changeset.title, actor: 'Human approval · agent staged', at: changeset.commit.at, changes: changeset.changes.length, revision: changeset.revision });
+  state.history.unshift({ id: changeset.commit.id, title: changeset.title, actor: 'Human approval · agent staged', at: changeset.commit.at, changes: changeset.changes.length, revision: changeset.revision, reversibleChanges: structuredClone(changeset.changes), reversed: false });
+  if (changeset.rollbackOf) { const original = state.history.find((item) => item.id === changeset.rollbackOf); if (original) original.reversed = true; }
   emit(); return changeset.commit;
+}
+
+export function beginRollback({ commitId }) {
+  const record = state.history.find((item) => item.id === commitId);
+  if (!record?.reversibleChanges?.length) throw new Error('This legacy audit entry does not retain a reversible payload.');
+  if (record !== state.history[0]) throw new Error('Only the most recent commit can be safely rolled back.');
+  if (record.reversed) throw new Error('This commit has already been reversed.');
+  if (state.changeset && !['committed', 'rolled_back'].includes(state.changeset.status)) throw new Error('Finish or reset the active change set before staging a rollback.');
+  const changes = record.reversibleChanges.flatMap((change) => {
+    const product = getProduct(change.entityId);
+    if (change.type === 'price' && product) return [{ id: uid('chg'), type: 'price', entityId: product.id, entityLabel: product.name, before: { price: product.price }, after: { price: change.before.price }, reason: `Safe reversal of ${record.id}.`, source: 'agent', policyResults: [] }];
+    if (change.type === 'feature' && product) return [{ id: uid('chg'), type: 'feature', entityId: product.id, entityLabel: product.name, before: { featured: product.featured }, after: { featured: change.before.featured }, reason: `Safe reversal of ${record.id}.`, source: 'agent', policyResults: [] }];
+    if (change.type === 'campaign') return [{ id: uid('chg'), type: 'campaign', entityId: 'campaign', entityLabel: `End ${change.after.name}`, before: { ...change.after }, after: { ...change.after, removal: true }, reason: `Safe reversal of ${record.id}.`, source: 'agent', policyResults: [] }];
+    return [];
+  });
+  state.changeset = { id: uid('cs'), title: `Rollback ${record.id}`, goal: `Safely reverse the latest committed change set, ${record.title}.`, status: 'staging', baseVersion: state.version, revision: 1, changes, validation: { pass: 0, warn: 0, block: 0 }, approval: null, rollbackOf: record.id };
+  validateChangeset({ notify: false }); emit(); return state.changeset;
 }
 export function runGuidedDemo() {
   beginChangeset({ title: 'Weekend Clearance', goal: 'Clear slow-moving inventory and maximize expected revenue while protecting gross margin.' });
@@ -147,18 +173,20 @@ export function registerWebMCP() {
   const response = (data) => ({ content: [{ type: 'text', text: JSON.stringify(data) }] });
   const register = (name, description, inputSchema, kind, action) => modelContext.registerTool({ name, description, inputSchema, execute(input) { try { const result = action(input || {}); audit(name, kind, kind === 'read' ? 'Read canonical/shared state' : 'Updated staged change set'); return response(result); } catch (error) { audit(name, kind, error.message, 'error'); return response({ status: 'error', message: error.message }); } } }).catch(() => {});
   const none = { type: 'object', properties: {}, additionalProperties: false };
-  register('get_store_summary', 'Read canonical store health, current version, active change-set state, and high-level merchandising signals.', none, 'read', () => ({ storeVersion: state.version, products: state.products.length, activeChangeSet: state.changeset && { id: state.changeset.id, status: state.changeset.status, revision: state.changeset.revision } }));
+  register('get_store_summary', 'Read canonical store health, current version, active change-set state, and high-level merchandising signals.', none, 'read', () => ({ storeVersion: state.version, products: state.products.length, campaigns: state.campaigns.length, activeChangeSet: state.changeset && { id: state.changeset.id, status: state.changeset.status, revision: state.changeset.revision } }));
   register('list_products', 'Read product metrics needed to identify clearance opportunities.', { type: 'object', properties: { seller: { type: 'string', enum: ['slow', 'steady', 'strong'] } }, additionalProperties: false }, 'read', ({ seller }) => ({ products: state.products.filter((product) => !seller || product.seller === seller).map((product) => ({ ...product, margin: grossMargin(product) })) }));
   register('get_store_policies', 'Read deterministic guardrails applied to every staged change and atomic commit.', none, 'read', () => ({ minimumGrossMargin: .25, maximumReduction: .5, strongSellerDiscounts: 'blocked', invalidPrices: 'blocked' }));
   register('begin_changeset', 'Create a new isolated change set. This never mutates canonical store.', { type: 'object', properties: { title: { type: 'string' }, goal: { type: 'string' } }, required: ['title', 'goal'], additionalProperties: false }, 'stage', beginChangeset);
   register('stage_price_change', 'Stage a product price in shadow state until human approval and commit.', { type: 'object', properties: { productId: { type: 'string' }, newPrice: { type: 'number' }, reason: { type: 'string' } }, required: ['productId', 'newPrice'], additionalProperties: false }, 'stage', stagePriceChange);
   register('stage_featured_product', 'Stage a clearance collection placement without changing the live storefront.', { type: 'object', properties: { productId: { type: 'string' }, featured: { type: 'boolean' } }, required: ['productId'], additionalProperties: false }, 'stage', stageFeaturedProduct);
   register('stage_campaign', 'Stage a new campaign with valid ISO dates.', { type: 'object', properties: { name: { type: 'string' }, starts: { type: 'string' }, ends: { type: 'string' } }, required: ['name', 'starts', 'ends'], additionalProperties: false }, 'stage', stageCampaign);
+  register('list_campaigns', 'Read the canonical campaigns that are already live.', none, 'read', () => ({ campaigns: state.campaigns }));
   register('get_changeset', 'Read the shared change set, human edits, revision, validation, and approval state.', none, 'read', () => state.changeset || { status: 'none' });
   register('validate_changeset', 'Run deterministic policy validation against staged changes.', none, 'stage', validateChangeset);
   register('request_commit', 'Request human approval for the exact validated revision; this never commits.', none, 'stage', requestCommit);
   register('commit_approved_changes', 'Atomically commit only after human approval of the unchanged revision.', none, 'commit', commitApprovedChanges);
   register('get_commit_history', 'Read immutable audit records for committed change sets.', none, 'read', () => state.history);
+  register('begin_rollback', 'Stage a safe, reviewable reversal of the latest reversible commit. This never mutates canonical store directly.', { type: 'object', properties: { commitId: { type: 'string' } }, required: ['commitId'], additionalProperties: false }, 'stage', beginRollback);
   register('reset_demo', 'Restore deterministic demo data in the local workspace.', none, 'stage', resetDemo);
   return true;
 }

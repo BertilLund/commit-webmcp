@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { approveChangeset, commitApprovedChanges, fmt, getProduct, getState, grossMargin, pct, registerWebMCP, resetDemo, runGuidedDemo, shadowProducts, stagePriceChange, subscribe } from '@/lib/domain';
+import { approveChangeset, beginRollback, commitApprovedChanges, fmt, getProduct, getState, grossMargin, pct, registerWebMCP, resetDemo, runGuidedDemo, shadowProducts, stagePriceChange, subscribe } from '@/lib/domain';
 
 const nav = [
   ['review', 'Review', Layers3],
@@ -76,7 +76,7 @@ function EmptyReview() {
 function ChangeRow({ change, onEdit }) {
   const product = change.type === 'price' ? getProduct(change.entityId) : null;
   const blocked = change.status === 'blocked';
-  const type = change.type === 'price' ? 'Price' : change.type === 'campaign' ? 'Campaign' : 'Placement';
+  const type = change.type === 'price' ? 'Price' : change.type === 'campaign' && change.after.removal ? 'Campaign removal' : change.type === 'campaign' ? 'Campaign' : 'Placement';
   return <Card className={blocked ? 'border-zinc-950' : ''}>
     <CardContent className="p-0">
       <div className="flex items-start gap-4 p-5">
@@ -85,7 +85,7 @@ function ChangeRow({ change, onEdit }) {
           <div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-sm font-semibold">{change.entityLabel}</p><p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">{type} · {change.source === 'human' ? 'human edited' : 'agent staged'}</p></div><StatusBadge status={change.status} /></div>
           {change.type === 'price' && <div className="mt-5 flex items-end gap-3 text-sm"><span className="text-zinc-400 line-through">{fmt(change.before.price)}</span><ArrowRight className="mb-0.5 size-3.5 text-zinc-400" /><strong className="text-lg">{fmt(change.after.price)}</strong><span className="mb-0.5 text-xs text-zinc-500">{pct(grossMargin(product, change.after.price))} margin</span></div>}
           {change.type === 'feature' && <p className="mt-5 text-sm"><span className="text-zinc-400">{change.before.featured ? 'Featured' : 'Not featured'}</span> <ArrowRight className="mx-2 inline size-3.5 text-zinc-400" /> <strong>{change.after.featured ? 'Featured' : 'Not featured'}</strong></p>}
-          {change.type === 'campaign' && <p className="mt-5 text-sm"><strong>{change.after.starts}</strong> <ArrowRight className="mx-2 inline size-3.5 text-zinc-400" /> <strong>{change.after.ends}</strong></p>}
+          {change.type === 'campaign' && <p className="mt-5 text-sm">{change.after.removal ? <><span className="text-zinc-400">Live campaign</span> <ArrowRight className="mx-2 inline size-3.5 text-zinc-400" /> <strong>Removed after commit</strong></> : <><strong>{change.after.starts}</strong> <ArrowRight className="mx-2 inline size-3.5 text-zinc-400" /> <strong>{change.after.ends}</strong></>}</p>}
           <p className="mt-4 text-xs leading-5 text-zinc-500">{change.reason}</p>
           {change.policyResults.length > 0 && <ul className="mt-4 space-y-1.5 border-t border-zinc-100 pt-4">{change.policyResults.map((outcome, index) => <PolicyLine key={index} outcome={outcome} />)}</ul>}
         </div>
@@ -120,9 +120,10 @@ function Catalog() {
   </div>;
 }
 
-function CommitHistory() {
+function CommitHistory({ onReview }) {
   const history = getState().history;
-  return <div className="border-t border-zinc-200 py-8"><p className="text-[10px] font-semibold tracking-[0.2em] text-zinc-500">CANONICAL HISTORY</p><h1 className="display mt-3 text-5xl leading-[0.9] sm:text-6xl">Every commit<br /><i>has a receipt.</i></h1><p className="mt-4 max-w-xl text-sm leading-6 text-zinc-600">The audit trail captures the actor, bound revision, and timestamp for every committed change set.</p><div className="mt-9 space-y-3">{history.map((item, index) => <Card key={item.id}><CardContent className="flex items-start gap-4 p-5"><span className="mt-1 grid size-7 place-items-center rounded-full border border-zinc-200 text-[10px]">{index + 1}</span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="text-sm font-semibold">{item.title}</p><p className="mt-1 text-xs text-zinc-500">{item.actor} · {item.changes} changes</p></div><StatusBadge status={index === 0 && getState().changeset?.status === 'committed' ? 'committed' : 'archived'} /></div><p className="mt-4 text-[10px] uppercase tracking-[0.14em] text-zinc-500">{item.id} · revision {item.revision} · {new Date(item.at).toLocaleString()}</p></div></CardContent></Card>)}</div></div>;
+  const stageRollback = (item) => { try { beginRollback({ commitId: item.id }); onReview(); } catch (error) { window.alert(error.message); } };
+  return <div className="border-t border-zinc-200 py-8"><p className="text-[10px] font-semibold tracking-[0.2em] text-zinc-500">CANONICAL HISTORY</p><h1 className="display mt-3 text-5xl leading-[0.9] sm:text-6xl">Every commit<br /><i>has a receipt.</i></h1><p className="mt-4 max-w-xl text-sm leading-6 text-zinc-600">The audit trail captures the actor, bound revision, and timestamp for every committed change set. The latest reversible commit can be staged for a separate human-approved rollback.</p><div className="mt-9 space-y-3">{history.map((item, index) => { const canRollback = index === 0 && item.reversibleChanges?.length && !item.reversed; return <Card key={item.id}><CardContent className="flex items-start gap-4 p-5"><span className="mt-1 grid size-7 place-items-center rounded-full border border-zinc-200 text-[10px]">{index + 1}</span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="text-sm font-semibold">{item.title}</p><p className="mt-1 text-xs text-zinc-500">{item.actor} · {item.changes} changes</p></div><div className="flex items-center gap-2"><StatusBadge status={item.reversed ? 'rolled_back' : index === 0 && getState().changeset?.status === 'committed' ? 'committed' : 'archived'} />{canRollback && <Button size="sm" variant="outline" onClick={() => stageRollback(item)}><RotateCcw className="size-3.5" />Stage rollback</Button>}</div></div><p className="mt-4 text-[10px] uppercase tracking-[0.14em] text-zinc-500">{item.id} · revision {item.revision} · {new Date(item.at).toLocaleString()}</p></div></CardContent></Card>; })}</div></div>;
 }
 
 export default function App() {
@@ -133,6 +134,6 @@ export default function App() {
   useEffect(() => subscribe(() => refresh((version) => version + 1)), []);
   useEffect(() => { setRegistered(registerWebMCP()); }, []);
   const state = getState();
-  const pageView = page === 'catalog' ? <Catalog /> : page === 'history' ? <CommitHistory /> : <Review changeset={state.changeset} onEdit={setEditing} />;
+  const pageView = page === 'catalog' ? <Catalog /> : page === 'history' ? <CommitHistory onReview={() => setPage('review')} /> : <Review changeset={state.changeset} onEdit={setEditing} />;
   return <div className="min-h-screen bg-white"><header className="fine-rule border-b border-zinc-200"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8"><button className="flex items-center gap-2" onClick={() => setPage('review')}><span className="grid size-7 place-items-center bg-zinc-950 text-xs text-white">C</span><span className="text-sm font-semibold tracking-tight">commit</span></button><div className="flex items-center gap-3"><span className="hidden text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-500 sm:inline">Northline Goods</span><span className="hidden h-4 w-px bg-zinc-200 sm:inline" /><span className="flex items-center gap-1.5 text-[10px] text-zinc-500"><span className={`size-1.5 rounded-full ${registered || document.modelContext?.registerTool ? 'bg-zinc-950' : 'bg-zinc-300'}`} />WebMCP {registered || document.modelContext?.registerTool ? 'ready' : 'standby'}</span><Button aria-label="Reset demo" variant="ghost" size="sm" onClick={resetDemo}><RotateCcw className="size-3.5" /><span className="hidden sm:inline">Reset</span></Button></div></div></header><div className="mx-auto grid max-w-7xl lg:grid-cols-[190px_minmax(0,1fr)]"><aside className="border-b border-zinc-200 px-5 py-3 lg:min-h-[calc(100vh-57px)] lg:border-b-0 lg:border-r lg:px-0 lg:py-8"><nav className="flex gap-1 lg:flex-col lg:px-4">{nav.map(([id, label, Icon]) => <button className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs transition-colors ${page === id ? 'bg-zinc-950 text-white' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-950'}`} key={id} onClick={() => setPage(id)}><Icon className="size-3.5" />{label}</button>)}</nav><div className="mt-8 hidden px-7 lg:block"><p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-500">Hard policy</p><p className="mt-2 text-xs leading-5 text-zinc-600">25% minimum margin. Strong sellers cannot be discounted.</p></div></aside><main className="min-w-0 px-5 sm:px-8">{pageView}</main></div><EditPriceDialog change={editing} open={Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)} /></div>;
 }

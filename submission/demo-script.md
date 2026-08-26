@@ -1,4 +1,4 @@
-# Commit demo script — 1:45 target
+# Commit demo script — 2:29 target
 
 ## 0:00–0:14 — Control problem
 
@@ -48,13 +48,13 @@
 
 > Approval is bound to this exact revision. Once the human approves, the agent can commit the complete plan atomically. The canonical catalog and storefront change together.
 
-## 2:19–2:36 — Audit trail
+## 2:19–2:36 — Audit trail and safe reversal
 
-**Visual:** Commit History with ID, actor, timestamp, and number of changes.
+**Visual:** Commit History with ID, actor, timestamp, and the “Stage rollback” action; then the staged rollback review.
 
 **Narration:**
 
-> Every commit leaves a concise audit record with the actor, revision, time, and diff. The same transaction pattern can apply to CRM, infrastructure, billing, and any stateful web app.
+> Every commit leaves a concise audit record with the actor, revision, time, and diff. If the latest commit needs to be undone, rollback is staged as a new reviewable change set and requires another human approval.
 
 ## 2:36–2:42 — Close
 

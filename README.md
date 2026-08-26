@@ -12,8 +12,8 @@ Commit is a WebMCP-native commerce operations demo. An agent can inspect store d
 
 The app registers browser-mediated tools through `document.modelContext.registerTool()`. The tools are intentionally domain-level rather than click automation:
 
-- Reads: store summary, product metrics, policies, shared change set, audit history
-- Staging: begin a change set, stage prices, campaign, and featured placements
+- Reads: store summary, product metrics, live campaigns, policies, shared change set, and audit history
+- Staging: begin a change set, stage prices, campaign, featured placements, and a safe rollback
 - Controls: deterministic validation, approval request, atomic approved commit, reset
 
 Every tool shares the same domain functions as the UI. Tool activity is only shown when an actual WebMCP callback runs.
@@ -23,7 +23,7 @@ Every tool shares the same domain functions as the UI. Tool activity is only sho
 1. Use ChatGPT's in-app browser or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Open the live app and ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
 3. Review **Agent Changes**, manually edit one proposed price, then ask the agent to inspect the change set again.
-4. The human approves the current revision and commits. Open **Commit History** to inspect the audit record.
+4. The human approves the current revision and commits. Open **Commit History** to inspect the audit record or stage a separately approved rollback of the latest commit.
 
 For a deterministic UI-only walkthrough, select **Run guided clearance set**. This never pretends to be an agent call.
 

@@ -13,11 +13,11 @@ As agents perform stateful web work, the common control models break down. Askin
 
 ## What Commit demonstrates
 
-The demo uses a fictional merchant workspace preparing a weekend clearance campaign. A compatible browser agent reads the catalog, inventory signals, policies, and active change set. It can stage price changes, featured placements, and a campaign without touching live store data. The policy engine blocks below-margin discounts and protects strong sellers. A human reviews the coherent diff, can edit a proposed price, then approves the exact revision. Only then can the change set commit atomically.
+The demo uses a fictional merchant workspace preparing a weekend clearance campaign. A compatible browser agent reads the catalog, inventory signals, policies, live campaigns, and active change set. It can stage price changes, featured placements, and a campaign without touching live store data. The policy engine blocks below-margin discounts and protects strong sellers. A human reviews the coherent diff, can edit a proposed price, then approves the exact revision. Only then can the change set commit atomically; the latest commit can later be staged as a separately approved rollback.
 
 ## Why WebMCP
 
-Commit exposes structured, browser-native tools through `document.modelContext.registerTool`. These are domain-level operations rather than click automation: inspect the store, create and inspect a change set, stage mutations, validate deterministic policies, request approval, commit an approved revision, and inspect audit history. The tools and UI use the same domain functions, so agent activity and human review stay in sync.
+Commit exposes structured, browser-native tools through `document.modelContext.registerTool`. These are domain-level operations rather than click automation: inspect the store, create and inspect a change set, stage mutations, validate deterministic policies, request approval, commit an approved revision, inspect audit history, and stage a reviewable rollback. The tools and UI use the same domain functions, so agent activity and human review stay in sync.
 
 ## What people and agents can do together
 
@@ -25,13 +25,13 @@ The agent can freely assemble a multi-step proposal while the human remains in c
 
 ## Implementation
 
-Commit is a dependency-light browser application with deterministic seeded data. It implements canonical versus shadow state composition, a deterministic policy engine, revision-bound approvals, atomic commit preconditions, local audit records, and real WebMCP registration. The app is intentionally usable without a login and includes a one-click reset for reliable judging.
+Commit is a React application using Tailwind, shadcn component patterns, and Radix accessibility primitives with deterministic seeded data. It implements canonical versus shadow state composition, a deterministic policy engine, revision-bound approvals, atomic commit preconditions, local audit records, safe reviewable reversal, and real WebMCP registration. The app is intentionally usable without a login and includes a one-click reset for reliable judging.
 
 ## Judge testing
 
 1. Open the live URL in ChatGPT's in-app browser, or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
-3. Review **Agent Changes**. Edit one proposed price, then ask the agent to inspect the change set again.
-4. Approve the exact revision and commit. Open **Commit History** for the audit record.
+3. Review the **Review** surface. Edit one proposed price, then ask the agent to inspect the change set again.
+4. Approve the exact revision and commit. Open **History** for the audit record and, if desired, stage the latest commit’s safe rollback for a fresh review.
 
 For a deterministic UI-only walkthrough, select **Run guided clearance set**. This is labelled as a guided demo and does not claim to be agent activity.
