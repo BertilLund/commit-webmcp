@@ -1,4 +1,4 @@
-# Commit demo script — 2:42 target
+# Commit demo script — 1:45 target
 
 ## 0:00–0:14 — Control problem
 
@@ -10,7 +10,7 @@
 
 ## 0:14–0:28 — Thesis
 
-**Visual:** Commit dashboard and the four-part control flow.
+**Visual:** Commit’s empty review surface and its three-step stage / review / commit explanation.
 
 **Narration:**
 
@@ -42,7 +42,7 @@
 
 ## 1:57–2:19 — One approval, atomic commit
 
-**Visual:** Approval action, committed success bar, storefront preview.
+**Visual:** Approval action, committed success bar, then the Catalog view showing the canonical price change.
 
 **Narration:**
 

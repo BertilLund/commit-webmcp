@@ -48,7 +48,7 @@ See [the detailed test record](docs/webmcp-real-client-test.md).
 
 ## Architecture
 
-`src/main.js` contains a small, explicit domain layer: canonical state, staged shadow composition, deterministic policies, revision-bound approval, atomic commit, and immutable audit records. Its static architecture keeps the challenge demo portable and offline-friendly; it deliberately contains no secrets or backend dependency.
+`src/lib/domain.js` contains the shared domain layer: canonical state, staged shadow composition, deterministic policies, revision-bound approval, atomic commit, and immutable audit records. The React/shadcn review surface in `src/App.jsx` calls the same functions as the WebMCP handlers, so a human edit and an agent action cannot drift apart. The portable browser-local architecture deliberately contains no secrets or backend dependency.
 
 ## License
 
