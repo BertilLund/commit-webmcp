@@ -6,10 +6,10 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - Tagline: Git for agent actions on the web.
 - Repository: https://github.com/BertilLund/commit-webmcp
 - Live app: https://commit-webmcp.pages.dev
-- Real-client verification commit: `04979e8fcd214260e36016124b06955c4753f8f2`
-- Submission candidate commit: to be tagged immediately before Devpost submission.
+- Real-client verification commit: `41b177a` (monochrome shadcn UI rebuild)
+- Submission candidate commit: `119acd9` (to be tagged immediately before Devpost submission).
 - Cloudflare Pages project: `commit-webmcp`
-- Current production deployment: https://be94b675.commit-webmcp.pages.dev
+- Current production deployment: https://e824a2be.commit-webmcp.pages.dev
 - License: MIT
 - Demo master: `submission/media/commit-demo.mp4` (1:45, H.264/AAC, 1280×720)
 - Video URL: pending YouTube upload
