@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Instrument Serif", Georgia, serif;
+}
+
+@layer base {
+  * { @apply border-zinc-200; }
+  body { @apply m-0 min-w-80 bg-white text-zinc-950 antialiased; }
+  button, input { font: inherit; }
+  button { @apply cursor-pointer; }
+}
+
+.display { font-family: var(--font-display); letter-spacing: -0.035em; }
+.fine-rule { background-image: linear-gradient(to right, #e4e4e7 1px, transparent 1px); background-size: 12px 1px; }
