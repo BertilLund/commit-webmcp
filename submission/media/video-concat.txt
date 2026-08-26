@@ -1,0 +1,13 @@
+file 'empty-state.png'
+duration 9
+file 'policy-blocked.png'
+duration 14
+file 'proposed-review.png'
+duration 18
+file 'human-editor.png'
+duration 16
+file 'committed-state.png'
+duration 24
+file 'commit-history.png'
+duration 24.5
+file 'commit-history.png'
