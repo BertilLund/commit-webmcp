@@ -40,6 +40,12 @@ npm run build
 
 The demo state is browser-local and includes **Reset demo** for a clean workspace.
 
+## Verification evidence
+
+The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app browser. Tool discovery exposed all 13 declared tools. The test staged a deliberately invalid $80 price for the Aster Field Jacket (blocked by the 25% gross-margin rule), corrected it to $109, staged a campaign and feature placement, then manually adjusted the shared price to $115 in the UI. The agent read the human revision, requested approval for revision 8, and committed only after the UI approval. The audit entry was created and `reset_demo` restored version 12 with no active change set. No browser console errors or warnings were observed.
+
+See [the detailed test record](docs/webmcp-real-client-test.md).
+
 ## Architecture
 
 `src/main.js` contains a small, explicit domain layer: canonical state, staged shadow composition, deterministic policies, revision-bound approval, atomic commit, and immutable audit records. Its static architecture keeps the challenge demo portable and offline-friendly; it deliberately contains no secrets or backend dependency.
