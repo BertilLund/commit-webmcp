@@ -7,9 +7,9 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - Repository: https://github.com/BertilLund/commit-webmcp
 - Live app: https://commit-webmcp.pages.dev
 - Real-client verification commit: current rollback release (15 WebMCP tools; evidence in `docs/webmcp-real-client-test.md`)
-- Submission candidate commit: to be tagged immediately before Devpost submission.
+- Submission candidate commit: `5387676` (minimal one-next-action UX; to be tagged immediately before Devpost submission).
 - Cloudflare Pages project: `commit-webmcp`
-- Current production deployment: https://5ca2651e.commit-webmcp.pages.dev
+- Current production deployment: https://a159690f.commit-webmcp.pages.dev
 - License: MIT
 - Demo master: `submission/media/commit-demo.mp4` (1:45, H.264/AAC, 1280×720)
 - Video URL: pending YouTube upload
