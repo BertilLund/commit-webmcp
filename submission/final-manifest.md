@@ -7,8 +7,8 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - Repository: https://github.com/BertilLund/commit-webmcp
 - Live app: https://commit-webmcp.pages.dev
 - Real-client verification commit: current rollback release (15 WebMCP tools; evidence in `docs/webmcp-real-client-test.md`)
-- Deployed application commit: pending the source commit for the functional transaction walkthrough now live at the deployment below.
-- Current release-record commit: `b139c80` (precedes the functional walkthrough; final tag will point to the post-recording release commit).
+- Deployed application commit: `0251188` (functional policy-block, correction, commit, audit, and rollback walkthrough).
+- Final release tag: pending the current-build recording, YouTube upload, and Devpost draft.
 - Cloudflare Pages project: `commit-webmcp`
 - Current production deployment: https://df719844.commit-webmcp.pages.dev
 - License: MIT
