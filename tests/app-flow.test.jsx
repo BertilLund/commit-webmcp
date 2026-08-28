@@ -28,6 +28,10 @@ describe('human review UI', () => {
     await user.click(screen.getByRole('button', { name: /apply these changes/i }));
     expect(await screen.findByText(/your store is updated/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: /see the audit record/i }).disabled).toBe(false);
+
+    await user.click(screen.getByRole('button', { name: /see the updated catalog/i }));
+    expect(await screen.findByText(/what is live now/i)).toBeTruthy();
+    expect(screen.getByText('$109')).toBeTruthy();
   });
 
   test('invalidates an approval when a human changes the staged plan', async () => {
