@@ -7,8 +7,8 @@ Use this only in a WebMCP-capable browser. The recording must show real browser 
 3. Record actual calls to `begin_changeset`, `stage_price_change`, `stage_featured_product`, `stage_campaign`, and `validate_changeset` appearing in the collapsed **Agent activity** panel.
 4. Have the agent stage Aster Field Jacket at `$80`; show the structured blocked validation result.
 5. Have the agent correct Aster Field Jacket to `$109`; show the now-safe plan.
-6. Select **See all 13 individual changes**. Use **Edit** to make a human price change to `$115`, then have the agent call `get_changeset` so the real activity list shows the shared-state read.
-7. Click **Approve this plan**. Let the agent call `commit_approved_changes` for that approved revision. The page now says **Your store is updated**. (For the labelled UI-only fallback, click **Apply these changes** yourself.)
+6. Show the four-stage transaction sequence, telemetry, and live-versus-proposed price vectors. Select **Inspect 13 changes**, use **Edit** to make a human price change to `$115`, then have the agent call `get_changeset` so the real activity list shows the shared-state read.
+7. Click **Approve this plan**. Let the agent call `commit_approved_changes` for that approved revision. The page now says **Commit complete**. (For the labelled UI-only fallback, click **Apply these changes** yourself.)
 8. Select **See the audit record**, click **Create a rollback plan**, approve the rollback plan, and commit it. Verify the reverted price through **See the updated catalog**.
 
 The UI deliberately labels the guided demo and never writes fake agent activity; do not use it for the recorded WebMCP proof.

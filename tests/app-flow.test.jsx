@@ -18,15 +18,15 @@ describe('human review UI', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: /create a clearance plan/i }));
+    await user.click(screen.getByRole('button', { name: /launch the demo/i }));
     expect((await screen.findByRole('button', { name: /approve this plan/i })).disabled).toBe(false);
-    expect(screen.getByText(/your store has not changed/i)).toBeTruthy();
+    expect(screen.getByText(/live store is unchanged/i)).toBeTruthy();
 
     await user.click(screen.getByRole('button', { name: /approve this plan/i }));
     expect((await screen.findByRole('button', { name: /apply these changes/i })).disabled).toBe(false);
 
     await user.click(screen.getByRole('button', { name: /apply these changes/i }));
-    expect(await screen.findByText(/your store is updated/i)).toBeTruthy();
+    expect(await screen.findByText(/commit complete/i)).toBeTruthy();
     expect(screen.getByRole('button', { name: /see the audit record/i }).disabled).toBe(false);
 
     await user.click(screen.getByRole('button', { name: /see the updated catalog/i }));
@@ -38,11 +38,11 @@ describe('human review UI', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: /create a clearance plan/i }));
+    await user.click(screen.getByRole('button', { name: /launch the demo/i }));
     await user.click(await screen.findByRole('button', { name: /approve this plan/i }));
     expect(await screen.findByRole('button', { name: /apply these changes/i })).toBeTruthy();
 
-    await user.click(screen.getByRole('button', { name: /see all 13 individual changes/i }));
+    await user.click(screen.getByRole('button', { name: /inspect 13 changes/i }));
     await user.click(screen.getByRole('button', { name: /edit aster field jacket/i }));
     const price = await screen.findByRole('spinbutton', { name: /new proposed price/i });
     await user.clear(price);

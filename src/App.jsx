@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, ChevronUp, Pencil, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import { approveChangeset, beginRollback, commitApprovedChanges, fmt, getProduct, getState, grossMargin, pct, registerWebMCP, resetDemo, runGuidedDemo, shadowProducts, stagePriceChange, subscribe } from '@/lib/domain';
 
 function EditPrice({ change, open, onOpenChange }) {
@@ -12,8 +16,37 @@ function EditPrice({ change, open, onOpenChange }) {
   return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><form onSubmit={save}><DialogHeader><p className="spx-micro text-zinc-500">Edit the plan</p><DialogTitle className="uppercase tracking-wide">Choose a different price</DialogTitle><DialogDescription>This stays proposed. It will not change the store until you approve and apply the plan.</DialogDescription></DialogHeader><label className="mt-6 block text-sm font-medium" htmlFor="proposed-price">Proposed price</label><div className="mt-2 flex rounded-sm border border-zinc-300 bg-white px-3 focus-within:ring-2 focus-within:ring-zinc-950"><span className="py-2.5 text-zinc-500">$</span><input aria-label="New proposed price" className="min-w-0 flex-1 bg-transparent px-2 py-2.5 outline-none" id="proposed-price" min="1" required step="1" type="number" value={value} onChange={(event) => setValue(event.target.value)} /></div><DialogFooter className="mt-6"><Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button><Button type="submit">Save price</Button></DialogFooter></form></DialogContent></Dialog>;
 }
 
+const sequence = [
+  ['01', 'Agent', 'Prepares'],
+  ['02', 'Plan', 'Staged'],
+  ['03', 'Human', 'Approves'],
+  ['04', 'Store', 'Updates'],
+];
+
+function CommitSequence({ status = 'empty' }) {
+  const active = status === 'committed' ? 3 : status === 'approved' ? 2 : status === 'empty' ? 0 : 1;
+  const progress = [8, 38, 68, 100][active];
+  return <div className="relative mt-12" aria-label="Commit workflow"><Progress aria-label={`${progress}% through the commit workflow`} className="spx-progress absolute left-5 right-5 top-[22px] w-auto" value={progress} /><ol className="relative grid grid-cols-4 gap-2">{sequence.map(([number, title, detail], index) => { const reached = index <= active; return <li className="min-w-0" key={title}><span className={`grid size-11 place-items-center rounded-full border text-xs font-bold transition-colors duration-300 ${reached ? 'border-white bg-white text-black' : 'border-[#3a3a3f] bg-black text-white/35'}`}>{index < active ? <Check className="size-4" /> : number}</span><p className={`mt-4 text-xs font-bold uppercase tracking-[0.08em] ${reached ? 'text-white' : 'text-white/35'}`}>{title}</p><p className={`mt-1 text-[11px] uppercase tracking-[0.06em] ${reached ? 'text-white/55' : 'text-white/25'}`}>{detail}</p></li>; })}</ol></div>;
+}
+
+function Telemetry({ changeset }) {
+  const prices = changeset.changes.filter((change) => change.type === 'price').length;
+  const features = changeset.changes.filter((change) => change.type === 'feature').length;
+  const campaigns = changeset.changes.filter((change) => change.type === 'campaign').length;
+  return <div className="mt-12 grid grid-cols-3 gap-3" aria-label="Plan impact"><Metric value={prices} label="Prices" /><Metric value={features} label="Featured" /><Metric value={campaigns} label="Campaign" /></div>;
+}
+
+function Metric({ value, label }) {
+  return <Card className="rounded-sm border-[#3a3a3f] bg-[#0a0a0a] text-white shadow-none"><CardContent className="p-4 sm:p-5"><p className="text-3xl font-bold leading-none sm:text-5xl">{String(value).padStart(2, '0')}</p><p className="spx-micro mt-3 text-white/45">{label}</p></CardContent></Card>;
+}
+
+function PriceVectors({ changes }) {
+  const priceChanges = changes.filter((change) => change.type === 'price').slice(0, 3);
+  return <div className="mt-10 space-y-5" aria-label="Live and proposed price comparison">{priceChanges.map((change) => { const ratio = Math.round((change.after.price / change.before.price) * 100); return <div key={change.id}><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.07em] text-white">{change.entityLabel}</p><p className="mt-1 text-xs text-white/45">Live {fmt(change.before.price)}</p></div><p className="text-xl font-bold text-white">{fmt(change.after.price)}</p></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15"><div className="h-full rounded-full bg-white transition-[width] duration-500" style={{ width: `${ratio}%` }} /></div></div>; })}</div>;
+}
+
 function EmptyState() {
-  return <section className="spx-enter py-20 sm:py-32"><p className="spx-micro text-white/60">Human control for agent work</p><h1 className="spx-display mt-5 max-w-3xl">Approve work before it changes your store.</h1><p className="spx-body mt-8 max-w-xl text-[#f0f0fa]/75">An agent can prepare many catalog actions at once. Commit turns them into one plan for you to review, edit, approve, and finally apply.</p><Button className="spx-ghost mt-10" onClick={runGuidedDemo}>Create a clearance plan <ArrowRight className="size-4" /></Button><p className="mt-5 text-[13px] text-white/55">Creates a safe proposal. No live changes.</p></section>;
+  return <section className="spx-enter py-14 sm:py-24"><div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr]"><div><Badge className="rounded-full border-white/30 bg-black px-3 py-1 text-white/70" variant="outline">Human approval layer</Badge><h1 className="spx-display mt-7">Stage. Steer. Commit.</h1><p className="spx-body mt-7 max-w-lg text-[#f0f0fa]/70">One safe plan between an agent and your live store.</p><Button className="spx-ghost mt-10" onClick={runGuidedDemo}>Launch the demo <ArrowRight className="size-4" /></Button></div><Card className="rounded-sm border-[#3a3a3f] bg-[#0a0a0a] text-white shadow-none"><CardContent className="p-6 sm:p-8"><div className="flex items-center justify-between"><p className="spx-micro text-white/45">Transaction sequence</p><Badge className="rounded-full border-white/25 bg-transparent text-white/55" variant="outline">Store safe</Badge></div><CommitSequence /><div className="mt-10 grid grid-cols-3 gap-3"><Metric value={13} label="Actions" /><Metric value={1} label="Review" /><Metric value={0} label="Live" /></div></CardContent></Card></div></section>;
 }
 
 function PlanList({ changes, onEdit }) {
@@ -37,18 +70,14 @@ function PlanScreen({ changeset, onEdit, onCatalog, onHistory }) {
   const [details, setDetails] = useState(false);
   const blocked = changeset.validation.block > 0;
   const firstBlocked = changeset.changes.find((change) => change.status === 'blocked');
-  const prices = changeset.changes.filter((change) => change.type === 'price').length;
-  const features = changeset.changes.filter((change) => change.type === 'feature').length;
-  const campaign = changeset.changes.some((change) => change.type === 'campaign');
   let state = 'Not live';
-  let headline = 'Ready for your decision.';
-  let copy = 'These changes are proposed only. Your store has not changed.';
+  let copy = 'Staged safely. The live store is unchanged.';
   let action = approveChangeset;
   let label = 'Approve this plan';
-  if (blocked) { state = 'Needs attention'; headline = 'One proposed change needs a fix.'; copy = 'The plan cannot be approved until that price meets the margin policy.'; action = () => onEdit(firstBlocked); label = 'Fix the price'; }
-  if (changeset.status === 'approved') { state = 'Approved'; headline = 'You approved this exact plan.'; copy = `Apply all ${changeset.changes.length} changes to the store at once.`; action = commitApprovedChanges; label = 'Apply these changes'; }
-  if (changeset.status === 'committed') return <section className="spx-enter py-16 sm:py-24"><p className="spx-micro text-white/60">Live</p><h1 className="spx-display mt-4">Your store is updated.</h1><p className="spx-body mt-7 max-w-xl text-[#f0f0fa]/75">All {changeset.changes.length} approved changes were applied together. Commit {changeset.commit.id} is saved in the audit record.</p><div className="mt-10"><Button className="spx-ghost" onClick={onCatalog}>See the updated catalog <ArrowRight className="size-4" /></Button><button className="spx-link mt-6 block text-[13px]" onClick={onHistory}>See the audit record</button></div></section>;
-  return <section className="spx-enter py-16 sm:py-24"><p className="spx-micro text-white/60">{state}</p><h1 className="spx-display mt-4">{headline}</h1><p aria-live="polite" className="spx-body mt-7 max-w-xl text-[#f0f0fa]/75">{copy}</p><div className="mt-12"><p className="spx-micro text-white/55">If you apply it, the store will</p><ul className="mt-4 space-y-3 text-base uppercase tracking-[0.06em] text-white"><li>Lower {prices} clearance prices</li><li>Feature {features} products</li>{campaign && <li>Schedule one weekend campaign</li>}</ul></div><button className="mt-9 flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white" onClick={() => setDetails((open) => !open)}>{details ? 'Hide the individual changes' : `See all ${changeset.changes.length} individual changes`}{details ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}</button>{details && <PlanList changes={changeset.changes} onEdit={onEdit} />}<div className="mt-12"><Button className="spx-ghost" onClick={action}>{changeset.status === 'approved' && <Check className="size-4" />}{label} <ArrowRight className="size-4" /></Button><p className="mt-5 text-[13px] text-white/55">{changeset.status === 'approved' ? 'This is the moment the proposed changes become live.' : 'You can inspect or edit the plan before approving it.'}</p></div><Activity activity={getState().activity} /></section>;
+  if (blocked) { state = 'Needs attention'; copy = 'One price is outside policy. Fix it to continue.'; action = () => onEdit(firstBlocked); label = 'Fix the price'; }
+  if (changeset.status === 'approved') { state = 'Approved'; copy = `Revision ${changeset.revision} is locked and ready to apply.`; action = commitApprovedChanges; label = 'Apply these changes'; }
+  if (changeset.status === 'committed') return <section className="spx-enter py-12 sm:py-20"><div className="flex flex-wrap items-center justify-between gap-3"><Badge className="rounded-full border-white bg-white px-3 py-1 text-black" variant="outline">Live</Badge><p className="spx-micro text-white/45">Commit {changeset.commit.id}</p></div><h1 className="mt-7 text-3xl font-bold uppercase tracking-[0.04em] sm:text-5xl">Commit complete</h1><Card className="mt-10 rounded-sm border-[#3a3a3f] bg-[#0a0a0a] text-white shadow-none"><CardContent className="p-6 sm:p-8"><CommitSequence status="committed" /><Telemetry changeset={changeset} /><div className="mt-10 grid gap-3 sm:grid-cols-2"><Card className="rounded-sm border-[#3a3a3f] bg-black text-white shadow-none"><CardContent className="p-5"><p className="spx-micro text-white/45">Canonical store</p><p className="mt-3 text-2xl font-bold uppercase">Updated</p></CardContent></Card><Card className="rounded-sm border-[#3a3a3f] bg-black text-white shadow-none"><CardContent className="p-5"><p className="spx-micro text-white/45">Audit record</p><p className="mt-3 text-2xl font-bold uppercase">Saved</p></CardContent></Card></div></CardContent></Card><div className="mt-10"><Button className="spx-ghost" onClick={onCatalog}>See the updated catalog <ArrowRight className="size-4" /></Button><button className="spx-link mt-6 block text-[13px]" onClick={onHistory}>See the audit record</button></div></section>;
+  return <section className="spx-enter py-12 sm:py-20"><div className="flex flex-wrap items-center justify-between gap-3"><Badge className={`rounded-full px-3 py-1 ${changeset.status === 'approved' ? 'border-white bg-white text-black' : 'border-white/30 bg-black text-white/70'}`} variant="outline">{state}</Badge><p className="spx-micro text-white/45">Revision {changeset.revision}</p></div><h1 className="mt-7 text-3xl font-bold uppercase tracking-[0.04em] sm:text-5xl">{changeset.title}</h1><p aria-live="polite" className="mt-3 text-sm text-white/55">{copy}</p><Card className="mt-9 rounded-sm border-[#3a3a3f] bg-[#0a0a0a] text-white shadow-none"><CardContent className="p-6 sm:p-8"><CommitSequence status={changeset.status} /><Telemetry changeset={changeset} /><PriceVectors changes={changeset.changes} /><Collapsible className="mt-9" open={details} onOpenChange={setDetails}><CollapsibleTrigger asChild><Button className="h-auto border-white/25 bg-transparent px-0 text-sm text-white/60 hover:bg-transparent hover:text-white" variant="ghost">{details ? 'Hide individual changes' : `Inspect ${changeset.changes.length} changes`}{details ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}</Button></CollapsibleTrigger><CollapsibleContent>{<PlanList changes={changeset.changes} onEdit={onEdit} />}</CollapsibleContent></Collapsible></CardContent></Card><div className="mt-10"><Button className="spx-ghost" onClick={action}>{changeset.status === 'approved' && <Check className="size-4" />}{label} <ArrowRight className="size-4" /></Button><p className="mt-5 text-[13px] text-white/50">{changeset.status === 'approved' ? 'This applies the approved revision to the live store.' : 'Approval never changes the live store.'}</p></div><Activity activity={getState().activity} /></section>;
 }
 
 function Catalog({ onBack }) {

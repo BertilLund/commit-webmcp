@@ -22,11 +22,11 @@ Every tool shares the same domain functions as the UI. Tool activity is only sho
 
 1. Use ChatGPT's in-app browser or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Open the live app and ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
-3. The landing page states the model clearly: create a plan, review it, approve it, then apply it. An agent can begin a change set directly through WebMCP; for the deterministic walkthrough, select **Create a clearance plan**.
-4. The plan says **Not live** until approval. Select **Approve this plan**, then **Apply these changes** to update the store together. Expand **See all 13 individual changes** to inspect or edit a proposed price first.
+3. The four-stage transaction component shows Agent → Plan → Human → Store. An agent can begin a change set directly through WebMCP; for the deterministic walkthrough, select **Launch the demo**.
+4. The live telemetry and price vectors show what is staged while the store remains unchanged. Select **Approve this plan**, then **Apply these changes** to update the store together. Expand **Inspect 13 changes** to edit a proposed price first.
 5. After commit, select **See the audit record** to inspect the live transaction or create a separately approved rollback plan.
 
-For a deterministic UI-only walkthrough, select **Create a clearance plan**. It explicitly does not pretend to be agent activity; the activity panel is reserved for actual WebMCP calls.
+For a deterministic UI-only walkthrough, select **Launch the demo**. It explicitly does not pretend to be agent activity; the activity panel is reserved for actual WebMCP calls.
 
 ## Local development
 

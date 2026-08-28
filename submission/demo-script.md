@@ -10,7 +10,7 @@
 
 ## 0:14–0:28 — Thesis
 
-**Visual:** Commit’s empty surface: “Approve work before it changes your store.” and the single **Create a clearance plan** action.
+**Visual:** Commit’s “Stage. Steer. Commit.” surface with the four-stage shadcn transaction sequence and single **Launch the demo** action.
 
 **Narration:**
 
@@ -18,7 +18,7 @@
 
 ## 0:28–1:13 — Agent builds an isolated plan
 
-**Visual:** WebMCP activity panel as the agent reads policies and catalog signals, then the proposed diff appearing.
+**Visual:** WebMCP activity as the agent reads policies and catalog signals; the sequence advances to Plan while telemetry and live-versus-proposed price vectors appear.
 
 **Narration:**
 
@@ -42,7 +42,7 @@
 
 ## 1:57–2:19 — One approval, atomic commit
 
-**Visual:** The prominent **Approve this plan** action becoming **Apply these changes**, then “Your store is updated” and the catalog view showing the canonical price change.
+**Visual:** The sequence advances through Human and Store as **Approve this plan** becomes **Apply these changes**, then “Commit complete” and the catalog view showing the canonical price change.
 
 **Narration:**
 

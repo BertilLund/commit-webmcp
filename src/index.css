@@ -41,6 +41,8 @@
 }
 .spx-ghost:hover { background: #fff !important; color: #000 !important; }
 .spx-ghost:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.spx-progress { height: 1px !important; background: #3a3a3f !important; }
+.spx-progress [data-slot="progress-indicator"] { background: #fff !important; transition-duration: 500ms; }
 
 @keyframes spx-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .spx-enter { animation: spx-enter 360ms ease-out both; }
