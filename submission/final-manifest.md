@@ -7,11 +7,12 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - Repository: https://github.com/BertilLund/commit-webmcp
 - Live app: https://commit-webmcp.pages.dev
 - Real-client verification commit: current rollback release (15 WebMCP tools; evidence in `docs/webmcp-real-client-test.md`)
-- Submission candidate commit: `2e7121b` (SpaceX design system with a shadcn visual transaction sequence; to be tagged immediately before Devpost submission).
+- Deployed application commit: `2e7121b` (SpaceX design system with a Shadcn visual transaction sequence).
+- Current release-record commit: `2255bfa` (records the deployment below; final tag will point to the post-recording release commit).
 - Cloudflare Pages project: `commit-webmcp`
 - Current production deployment: https://e44028b8.commit-webmcp.pages.dev
 - License: MIT
-- Demo master: `submission/media/commit-demo.mp4` (1:45, H.264/AAC, 1280×720)
+- Demo master: **not yet recorded from the current Shadcn build**. The existing `submission/media/commit-demo.mp4` is retired reference footage and must not be uploaded.
 - Video URL: pending YouTube upload
 - Devpost URL: pending Devpost login and draft creation
 - Verified deadline: September 3, 2026, 1:00 PM Pacific / 22:00 CEST
