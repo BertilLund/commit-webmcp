@@ -22,10 +22,10 @@ Every tool shares the same domain functions as the UI. Tool activity is only sho
 
 1. Use ChatGPT's in-app browser or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Open the live app and ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
-3. Open **Review**. The black “Your next action” panel tells you exactly what is safe to do next: approve the staged plan, then commit it. You can edit a proposed price before approval.
+3. Open **Review**. The page states whether the plan is staged, approved, or live and presents one decision at a time: **Approve this plan**, then **Commit this plan**. You can expand the diff or edit a proposed price before approval.
 4. Open **History** to inspect the audit record or stage a separately approved rollback of the latest commit.
 
-For a deterministic UI-only walkthrough, select **Run guided demo**. It explicitly does not pretend to be agent activity; the activity panel is reserved for actual WebMCP calls.
+For a deterministic UI-only walkthrough, select **Show me a working plan**. It explicitly does not pretend to be agent activity; the activity panel is reserved for actual WebMCP calls.
 
 ## Local development
 
@@ -46,9 +46,9 @@ The demo state is browser-local and includes **Reset demo** for a clean workspac
 
 ## Verification evidence
 
-`npm run test` runs four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback.
+`npm run test` runs four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback. It also runs an interaction test that clicks through the actual review UI: guided plan → human approval → atomic commit.
 
-The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app browser. Tool discovery exposed all 13 declared tools. The test staged a deliberately invalid $80 price for the Aster Field Jacket (blocked by the 25% gross-margin rule), corrected it to $109, staged a campaign and feature placement, then manually adjusted the shared price to $115 in the UI. The agent read the human revision, requested approval for revision 8, and committed only after the UI approval. The audit entry was created and `reset_demo` restored version 12 with no active change set. No browser console errors or warnings were observed.
+The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app browser. Tool discovery exposed all 15 declared tools. The test staged a deliberately invalid $80 price for the Aster Field Jacket (blocked by the 25% gross-margin rule), corrected it to $109, staged a campaign and feature placement, then manually adjusted the shared price to $115 in the UI. The agent read the human revision, requested approval for revision 8, and committed only after the UI approval. The audit entry was created and `reset_demo` restored version 12 with no active change set. No browser console errors or warnings were observed.
 
 The current release exposes 15 tools and separately verifies the safe rollback flow in the real client; see the detailed test record below.
 

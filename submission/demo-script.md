@@ -1,4 +1,4 @@
-# Commit demo script — 2:29 target
+# Commit demo script — 2:42 target
 
 ## 0:00–0:14 — Control problem
 
@@ -10,7 +10,7 @@
 
 ## 0:14–0:28 — Thesis
 
-**Visual:** Commit’s empty review surface and its three-step stage / review / commit explanation.
+**Visual:** Commit’s empty Review surface: “An agent prepares. You decide.” and the single **Show me a working plan** action.
 
 **Narration:**
 
@@ -42,7 +42,7 @@
 
 ## 1:57–2:19 — One approval, atomic commit
 
-**Visual:** Approval action, committed success bar, then the Catalog view showing the canonical price change.
+**Visual:** The prominent **Approve this plan** action becoming **Commit this plan**, then “Changes applied” and the Catalog view showing the canonical price change.
 
 **Narration:**
 
@@ -50,7 +50,7 @@
 
 ## 2:19–2:36 — Audit trail and safe reversal
 
-**Visual:** Commit History with ID, actor, timestamp, and the “Stage rollback” action; then the staged rollback review.
+**Visual:** Commit History with ID, actor, timestamp, and the **Stage a rollback** action; then the staged rollback review.
 
 **Narration:**
 

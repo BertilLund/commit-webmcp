@@ -34,4 +34,4 @@ Commit is a React application using Tailwind, shadcn component patterns, and Rad
 3. Review the **Review** surface. Edit one proposed price, then ask the agent to inspect the change set again.
 4. Approve the exact revision and commit. Open **History** for the audit record and, if desired, stage the latest commit’s safe rollback for a fresh review.
 
-For a deterministic UI-only walkthrough, select **Run guided clearance set**. This is labelled as a guided demo and does not claim to be agent activity.
+For a deterministic UI-only walkthrough, select **Show me a working plan**. This is labelled as a guided demo and does not claim to be agent activity.
