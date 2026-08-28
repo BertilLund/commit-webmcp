@@ -46,7 +46,7 @@ The demo state is browser-local and includes **Reset demo** for a clean workspac
 
 ## Verification evidence
 
-`npm run test` runs four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback. It also runs an interaction test that clicks through the actual review UI: guided plan → human approval → atomic commit.
+`npm run test` runs four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback. It also runs two interaction tests that click through the actual review UI: guided plan → human approval → atomic commit, plus a human price edit that invalidates an existing approval.
 
 The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app browser. Tool discovery exposed all 15 declared tools. The test staged a deliberately invalid $80 price for the Aster Field Jacket (blocked by the 25% gross-margin rule), corrected it to $109, staged a campaign and feature placement, then manually adjusted the shared price to $115 in the UI. The agent read the human revision, requested approval for revision 8, and committed only after the UI approval. The audit entry was created and `reset_demo` restored version 12 with no active change set. No browser console errors or warnings were observed.
 

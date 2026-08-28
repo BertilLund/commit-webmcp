@@ -18,7 +18,7 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 
 ## Verification record
 
-- `npm run test` succeeds (5 tests: 4 transaction-engine tests plus the human review interaction flow).
+- `npm run test` succeeds (6 tests: 4 transaction-engine tests plus two human review interaction flows).
 - `npm run build` succeeds.
 - The live URL returned HTTP 200 on public verification.
 - The public GitHub repository was verified as non-private with `main` default branch and an MIT license.
