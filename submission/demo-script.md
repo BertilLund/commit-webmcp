@@ -10,7 +10,7 @@
 
 ## 0:14–0:28 — Thesis
 
-**Visual:** Commit’s “Stage. Steer. Commit.” surface with the four-stage shadcn transaction sequence and single **Launch the demo** action.
+**Visual:** Commit’s “Watch the guardrail work” surface with the live-store, shadow-state, and policy-engine transaction proof.
 
 **Narration:**
 

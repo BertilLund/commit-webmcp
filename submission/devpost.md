@@ -34,4 +34,4 @@ Commit is a React application using Tailwind, shadcn component patterns, and Rad
 3. The transaction sequence, telemetry, and price vectors show the staged plan while its badge says **Not live**. Expand **Inspect 13 changes**, edit one proposed price, then ask the agent to inspect the change set again.
 4. Approve the exact revision and let the agent commit. The UI-only fallback is **Approve this plan**, then **Apply these changes**. Select **See the audit record** after commit to create a safe rollback plan for a fresh review.
 
-For a deterministic UI-only walkthrough, select **Launch the demo**. This is labelled as a guided demo and does not claim to be agent activity.
+For a deterministic browser walkthrough, select **Stage an unsafe price**. The app runs a real policy rejection first, then lets the judge correct it and continue through the same transaction engine used by WebMCP. The walkthrough never writes fake agent activity; **Real WebMCP calls only** is populated exclusively by compatible-agent tool calls.

@@ -14,11 +14,16 @@ beforeEach(async () => {
 afterEach(() => cleanup());
 
 describe('human review UI', () => {
-  test('takes a user from a guided plan through approve and atomic commit', async () => {
+  test('shows a real policy block, correction, approval, and atomic commit', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: /launch the demo/i }));
+    await user.click(screen.getByRole('button', { name: /stage an unsafe price/i }));
+    expect(await screen.findByText(/blocked by policy/i)).toBeTruthy();
+    expect(screen.getByText(/live price is still \$148/i)).toBeTruthy();
+    expect(screen.getByText(/would land at 13% gross margin/i)).toBeTruthy();
+
+    await user.click(screen.getByRole('button', { name: /correct to \$109 and build the plan/i }));
     expect((await screen.findByRole('button', { name: /approve this plan/i })).disabled).toBe(false);
     expect(screen.getByText(/live store is unchanged/i)).toBeTruthy();
 
@@ -38,7 +43,8 @@ describe('human review UI', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: /launch the demo/i }));
+    await user.click(screen.getByRole('button', { name: /stage an unsafe price/i }));
+    await user.click(screen.getByRole('button', { name: /correct to \$109 and build the plan/i }));
     await user.click(await screen.findByRole('button', { name: /approve this plan/i }));
     expect(await screen.findByRole('button', { name: /apply these changes/i })).toBeTruthy();
 
@@ -51,5 +57,25 @@ describe('human review UI', () => {
 
     expect(await screen.findByRole('button', { name: /approve this plan/i })).toBeTruthy();
     expect(screen.queryByRole('button', { name: /apply these changes/i })).toBeNull();
+  });
+
+  test('creates a reviewable rollback that restores committed catalog state', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: /stage an unsafe price/i }));
+    await user.click(screen.getByRole('button', { name: /correct to \$109 and build the plan/i }));
+    await user.click(await screen.findByRole('button', { name: /approve this plan/i }));
+    await user.click(await screen.findByRole('button', { name: /apply these changes/i }));
+    await user.click(await screen.findByRole('button', { name: /see the audit record/i }));
+
+    await user.click(await screen.findByRole('button', { name: /create a rollback plan/i }));
+    expect(await screen.findByText(/safely reverse the latest committed change set/i)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /approve this plan/i }));
+    await user.click(await screen.findByRole('button', { name: /apply these changes/i }));
+    await user.click(await screen.findByRole('button', { name: /see the updated catalog/i }));
+
+    expect(await screen.findByText(/what is live now/i)).toBeTruthy();
+    expect(screen.getByText('$148')).toBeTruthy();
   });
 });

@@ -4,14 +4,14 @@ Audited on 2026-08-28 against `docs/challenge-requirements.md` and the current p
 
 | Requirement | Status | Evidence / next action |
 | --- | --- | --- |
-| Working public application | Complete | https://commit-webmcp.pages.dev — no login required; Cloudflare deployment `e44028b8` |
+| Working public application | Complete | https://commit-webmcp.pages.dev — no login required; functional walkthrough deployment `df719844` |
 | Genuine browser-native WebMCP | Complete | 15 tools registered with `document.modelContext.registerTool`; real-client evidence in `docs/webmcp-real-client-test.md` |
 | Human/agent shared state | Complete | Human edits and agent reads use the same revisioned change set; covered by UI and browser-callback tests |
 | Deterministic policy enforcement | Complete | Margin, price, strong-seller, campaign, and revision rules live in `src/lib/domain.js` |
 | Revision-bound human approval | Complete | Mutation invalidates approval; commit requires the approved revision and content hash |
 | Atomic commit, audit, rollback | Complete | Canonical store updates once, history is persisted, and latest commits generate reviewable rollback plans |
 | Minimal Shadcn interface | Complete | SpaceX black/white system, Shadcn cards/badges/dialog/progress/collapsible, visual transaction sequence, telemetry, and price vectors |
-| Automated verification | Complete | `npm run test`: 8 tests; `npm run build`: successful |
+| Automated verification | Complete | `npm run test`: 9 tests; `npm run build`: successful |
 | Public source and license | Complete | https://github.com/BertilLund/commit-webmcp — public `main`, MIT license |
 | Submission copy and testing instructions | Complete | `submission/devpost.md`, `README.md`, and `submission/youtube.md` |
 | Current screenshots | Human action required | Capture the current public Shadcn build during the real-client run; do not use the retired files in `submission/media/` |
@@ -27,4 +27,4 @@ Audited on 2026-08-28 against `docs/challenge-requirements.md` and the current p
 4. Add the YouTube and Devpost URLs to `submission/final-manifest.md`.
 5. Run the release preflight, tag the exact final commit, push the tag, submit, and freeze.
 
-No remaining product behavior is represented by placeholder UI. The guided walkthrough is explicitly labelled as a fallback; the submission recording must show the real WebMCP client path.
+No product behavior is represented by placeholder UI. The browser walkthrough invokes the actual transaction engine and visibly demonstrates a policy block, correction, shadow-state staging, revision approval, commit, audit, and rollback. It is not presented as an agent: the submission recording must still show the real WebMCP client path.

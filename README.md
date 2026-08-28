@@ -22,11 +22,12 @@ Every tool shares the same domain functions as the UI. Tool activity is only sho
 
 1. Use ChatGPT's in-app browser or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Open the live app and ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
-3. The four-stage transaction component shows Agent → Plan → Human → Store. An agent can begin a change set directly through WebMCP; for the deterministic walkthrough, select **Launch the demo**.
-4. The live telemetry and price vectors show what is staged while the store remains unchanged. Select **Approve this plan**, then **Apply these changes** to update the store together. Expand **Inspect 13 changes** to edit a proposed price first.
+3. Select **Stage an unsafe price**. The real transaction engine proposes `$80`, calculates a 13% margin, and visibly blocks it against the 25% store policy while the canonical store remains untouched.
+4. Select **Correct to $109 and build the plan**. The same domain functions used by WebMCP create the 13-change shadow transaction. The telemetry and price vectors update from actual staged state.
+5. Select **Approve this plan**, then **Apply these changes** to atomically update the store. Expand **Inspect 13 changes** to edit a proposed price and invalidate the old approval first.
 5. After commit, select **See the audit record** to inspect the live transaction or create a separately approved rollback plan.
 
-For a deterministic UI-only walkthrough, select **Launch the demo**. It explicitly does not pretend to be agent activity; the activity panel is reserved for actual WebMCP calls.
+The deterministic browser walkthrough runs the real policy, shadow-state, approval, commit, audit, and rollback engine. It does not pretend its clicks are WebMCP activity; **Real WebMCP calls only** is populated exclusively by compatible-agent tool execution.
 
 ## Local development
 

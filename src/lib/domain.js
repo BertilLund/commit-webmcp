@@ -157,11 +157,18 @@ export function beginRollback({ commitId }) {
   state.changeset = { id: uid('cs'), title: `Rollback ${record.id}`, goal: `Safely reverse the latest committed change set, ${record.title}.`, status: 'staging', baseVersion: state.version, revision: 1, changes, validation: { pass: 0, warn: 0, block: 0 }, approval: null, rollbackOf: record.id };
   validateChangeset({ notify: false }); emit(); return state.changeset;
 }
-export function runGuidedDemo() {
+export function startGuidedDemo() {
   beginChangeset({ title: 'Weekend Clearance', goal: 'Clear slow-moving inventory and maximize expected revenue while protecting gross margin.' });
+  stagePriceChange({ productId: 'p01', newPrice: 80, reason: 'Test a deep clearance price against store policy.' });
+  return state.changeset;
+}
+
+export function completeGuidedDemo() {
+  if (!state.changeset) startGuidedDemo();
   [['p01', 109], ['p04', 99], ['p07', 69], ['p09', 89], ['p12', 82], ['p13', 72], ['p18', 82]].forEach(([productId, newPrice]) => stagePriceChange({ productId, newPrice, reason: 'Slow velocity and aged inventory justify this measured clearance action.' }));
   ['p01', 'p04', 'p07', 'p09', 'p18'].forEach((productId) => stageFeaturedProduct({ productId }));
   stageCampaign({ name: 'Weekend Field Clearance', starts: '2026-08-28', ends: '2026-08-31' });
+  return state.changeset;
 }
 
 let registered = false;

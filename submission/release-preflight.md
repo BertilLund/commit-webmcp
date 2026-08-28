@@ -5,7 +5,7 @@ Run this only after recording the current real-browser WebMCP demo and before th
 ## Release evidence
 
 - [ ] Current source is clean: `git status --short` prints nothing.
-- [ ] `npm run test` passes all 8 tests.
+- [ ] `npm run test` passes all 9 tests.
 - [ ] `npm run build` passes.
 - [ ] The deployed production build is the same app revision intended for judging.
 - [ ] The public live URL opens without login and shows the WebMCP compatibility state without crashing in a normal browser.
