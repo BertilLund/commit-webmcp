@@ -10,7 +10,7 @@
 
 ## 0:14–0:28 — Thesis
 
-**Visual:** Commit’s empty Review surface: “An agent prepares. You decide.” and the single **Show me a working plan** action.
+**Visual:** Commit’s empty surface: “Approve work before it changes your store.” and the single **Create a clearance plan** action.
 
 **Narration:**
 
@@ -42,7 +42,7 @@
 
 ## 1:57–2:19 — One approval, atomic commit
 
-**Visual:** The prominent **Approve this plan** action becoming **Commit this plan**, then “Changes applied” and the Catalog view showing the canonical price change.
+**Visual:** The prominent **Approve this plan** action becoming **Apply these changes**, then “Your store is updated” and the catalog view showing the canonical price change.
 
 **Narration:**
 
@@ -50,7 +50,7 @@
 
 ## 2:19–2:36 — Audit trail and safe reversal
 
-**Visual:** Commit History with ID, actor, timestamp, and the **Stage a rollback** action; then the staged rollback review.
+**Visual:** The audit record with ID, actor, timestamp, and the **Create a rollback plan** action; then the staged rollback review.
 
 **Narration:**
 

@@ -31,7 +31,7 @@ Commit is a React application using Tailwind, shadcn component patterns, and Rad
 
 1. Open the live URL in ChatGPT's in-app browser, or Chrome 149+ with `chrome://flags/#enable-webmcp-testing` enabled.
 2. Ask: “Prepare a weekend clearance campaign. Clear slow-moving inventory and maximize expected revenue. Never take a product below 25% gross margin, don’t discount products that are already selling well, create the campaign, and feature the five best opportunities.”
-3. Review the **Review** surface. Edit one proposed price, then ask the agent to inspect the change set again.
-4. Approve the exact revision and commit. Open **History** for the audit record and, if desired, stage the latest commit’s safe rollback for a fresh review.
+3. The page says **Not live** until the exact plan is approved. Expand **See all 13 individual changes**, edit one proposed price, then ask the agent to inspect the change set again.
+4. Approve the exact revision and let the agent commit. The UI-only fallback is **Approve this plan**, then **Apply these changes**. Select **See the audit record** after commit to create a safe rollback plan for a fresh review.
 
-For a deterministic UI-only walkthrough, select **Show me a working plan**. This is labelled as a guided demo and does not claim to be agent activity.
+For a deterministic UI-only walkthrough, select **Create a clearance plan**. This is labelled as a guided demo and does not claim to be agent activity.

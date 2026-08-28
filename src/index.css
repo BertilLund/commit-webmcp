@@ -6,8 +6,7 @@
 }
 
 @layer base {
-  * { @apply border-zinc-800; }
-  body { @apply m-0 min-w-80 bg-[#0a0a0a] text-zinc-100 antialiased; }
+  body { @apply m-0 min-w-80 bg-white text-zinc-950 antialiased; }
   button, input { font: inherit; }
   button { @apply cursor-pointer; }
 }
