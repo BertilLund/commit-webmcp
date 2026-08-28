@@ -1,14 +1,48 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "D-DIN", "Arial Narrow", Arial, Verdana, sans-serif;
 }
 
 @layer base {
-  body { @apply m-0 min-w-80 bg-white text-zinc-950 antialiased; }
+  body { @apply m-0 min-w-80 bg-black text-white antialiased; letter-spacing: 0.02em; }
   button, input { font: inherit; }
   button { @apply cursor-pointer; }
 }
 
-.eyebrow { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.12em; color: #71717a; }
+.spx-display {
+  max-width: 52rem;
+  font-family: "D-DIN-Bold", "Arial Narrow", Arial, Verdana, sans-serif;
+  font-size: clamp(2.5rem, 7.5vw, 5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.spx-body { font-size: 1rem; line-height: 1.7; letter-spacing: 0.02em; }
+.spx-micro { font-size: 0.75rem; line-height: 2; letter-spacing: 0.08em; text-transform: uppercase; }
+.spx-link { color: rgba(255, 255, 255, 0.65); text-decoration: underline; text-underline-offset: 4px; transition: color 160ms ease; }
+.spx-link:hover { color: #fff; }
+.spx-ghost {
+  height: auto !important;
+  min-height: 50px;
+  padding: 18px 24px !important;
+  border: 1px solid #fff !important;
+  border-radius: 32px !important;
+  background: #000 !important;
+  color: #fff !important;
+  font-size: 0.813rem !important;
+  font-weight: 700 !important;
+  line-height: 0.94 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+.spx-ghost:hover { background: #fff !important; color: #000 !important; }
+.spx-ghost:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+@keyframes spx-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.spx-enter { animation: spx-enter 360ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) { .spx-enter { animation: none; } }
