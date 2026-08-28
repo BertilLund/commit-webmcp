@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @layer base {
@@ -12,5 +12,4 @@
   button { @apply cursor-pointer; }
 }
 
-.display { font-family: var(--font-display); letter-spacing: -0.035em; }
-.fine-rule { background-image: linear-gradient(to right, #e4e4e7 1px, transparent 1px); background-size: 12px 1px; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.12em; color: #71717a; }
