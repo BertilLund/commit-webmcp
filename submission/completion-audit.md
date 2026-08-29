@@ -4,7 +4,7 @@ Audited on 2026-08-28 against `docs/challenge-requirements.md` and the current p
 
 | Requirement | Status | Evidence / next action |
 | --- | --- | --- |
-| Working public application | Complete | https://commit-webmcp.pages.dev — no login required; functional walkthrough deployment `df719844` |
+| Working public application | Complete | https://commit-webmcp.pages.dev — no login required; verified release deployment `fefb0cb2` |
 | Genuine browser-native WebMCP | Complete | 15 tools registered with `document.modelContext.registerTool`; real-client evidence in `docs/webmcp-real-client-test.md` |
 | Human/agent shared state | Complete | Human edits and agent reads use the same revisioned change set; covered by UI and browser-callback tests |
 | Deterministic policy enforcement | Complete | Margin, price, strong-seller, campaign, and revision rules live in `src/lib/domain.js` |
