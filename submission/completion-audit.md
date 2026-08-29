@@ -12,7 +12,7 @@ Audited on 2026-08-28 against `docs/challenge-requirements.md` and the current p
 | Atomic commit, audit, rollback | Complete | Canonical store updates once, history is persisted, and latest commits generate reviewable rollback plans |
 | Minimal Shadcn interface | Complete | SpaceX black/white system, Shadcn cards/badges/dialog/progress/collapsible, visual transaction sequence, telemetry, and price vectors |
 | Automated verification | Complete | `npm run lint`: zero warnings; `npm run test`: 10 tests including the primary-flow axe scan; `npm run build`: successful; `npm audit`: 0 vulnerabilities; React Doctor: 100/100; public GitHub Actions CI runs the same gates |
-| Public source and license | Complete | https://github.com/BertilLund/commit-webmcp — public `main`, MIT license |
+| Public source and license | Complete | https://github.com/BertilLund/commit-webmcp — public `main`, MIT license; fresh public clone on 2026-08-29 passed `npm ci`, lint, all 10 tests, and build |
 | Submission copy and testing instructions | Complete | `submission/devpost.md`, `README.md`, and `submission/youtube.md` |
 | Current screenshots | Human action required | Capture the current public Shadcn build during the real-client run; do not use the retired files in `submission/media/` |
 | Public video under three minutes with English audio | Human action required | Follow `submission/real-demo-recording-runbook.md` and `submission/demo-script.md`, then upload using `submission/youtube.md` |

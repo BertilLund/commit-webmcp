@@ -24,6 +24,7 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - `npm run build` succeeds.
 - `npm audit` reports 0 known vulnerabilities.
 - React Doctor reports 100/100 with no findings.
+- A fresh public GitHub clone on 2026-08-29 completed `npm ci`, lint, all 10 tests, and the production build; its asset hashes matched the deployed application release.
 - The live URL returned HTTP 200 on public verification.
 - The public GitHub repository was verified as non-private with `main` default branch and an MIT license.
 - A full real-client WebMCP run is documented in `docs/webmcp-real-client-test.md`.

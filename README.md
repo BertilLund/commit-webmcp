@@ -58,6 +58,8 @@ The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app brows
 
 The current release exposes 15 tools and separately verifies the safe rollback flow in the real client; see the detailed test record below.
 
+Reproducibility was independently checked from a fresh clone of the public repository on 2026-08-29: `npm ci`, lint, all 10 tests, and the production build succeeded, and the generated asset hashes matched the deployed application release.
+
 See [the detailed test record](docs/webmcp-real-client-test.md).
 
 ## Architecture

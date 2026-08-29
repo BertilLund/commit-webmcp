@@ -9,6 +9,7 @@ Run this only after recording the current real-browser WebMCP demo and before th
 - [ ] `npm run test` passes all 10 tests, including the automated accessibility scan.
 - [ ] `npm run build` passes.
 - [ ] `npm audit` reports no known dependency vulnerabilities.
+- [ ] The public repository still reproduces from a clean checkout with `npm ci`, lint, tests, and build (last independently verified 2026-08-29).
 - [ ] The deployed production build is the same app revision intended for judging.
 - [ ] The public live URL opens without login and shows the WebMCP compatibility state without crashing in a normal browser.
 - [ ] The actual compatible-browser recording shows tool discovery, policy block/correction, human edit, human approval, agent commit, and safe rollback.
