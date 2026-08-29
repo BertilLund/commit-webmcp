@@ -14,3 +14,5 @@
 - `commit-review.png` — production-build capture of the 13-change guided walkthrough after a human revision.
 
 The application captures were taken from a production build of Commit on 2026-08-26. The WebMCP behavior itself was separately re-verified in Codex’s WebMCP-capable in-app browser after the redesign. Do not present these older captures as the final submission media; the recording runbook and script now target the current deployed UI.
+
+The final capture must come from release `a568849` / Cloudflare deployment `fefb0cb2`. Its unmistakable first functional state is the white policy-result card showing `$80 → 13% → Blocked`; any media without that card is from a retired interface.

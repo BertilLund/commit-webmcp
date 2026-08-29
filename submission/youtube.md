@@ -25,7 +25,7 @@ Source: https://github.com/BertilLund/commit-webmcp
 - Language: English
 - Captions: Upload the narration transcript after it has been updated to the final recording timings
 - Music: none
-- Thumbnail: use a clean frame from the current Review screen showing “An agent prepares. You decide.” and no browser chrome or account information
+- Thumbnail: use the current white policy-result card showing `$80 → 13% → Blocked`, with the surrounding black interface and no browser chrome or account information
 
 ## Final upload checks
 
