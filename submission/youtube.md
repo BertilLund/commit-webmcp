@@ -24,6 +24,7 @@ Source: https://github.com/BertilLund/commit-webmcp
 - Audience: No, it is not made for kids
 - Language: English
 - Captions: Upload the narration transcript after it has been updated to the final recording timings
+- Audio source: `submission/media/commit-narration-current.wav` (verified duration 2:34.37)
 - Music: none
 - Thumbnail: use the current white policy-result card showing `$80 → 13% → Blocked`, with the surrounding black interface and no browser chrome or account information
 

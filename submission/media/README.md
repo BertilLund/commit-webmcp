@@ -1,8 +1,9 @@
 # Submission media
 
 - `commit-demo.mp4` — prior H.264/AAC demo master. It remains useful as an editing reference, but it must be re-recorded from the current public build before submission because the review UI was deliberately simplified after these captures.
-- `commit-narration.mp3` — narration source.
-- `commit-narration.txt` — narration transcript used to produce the source audio.
+- `commit-narration-current.wav` — current-release offline English narration, 2:34.37, generated with Microsoft David Desktop and timed to leave room for a short title/end frame while remaining under three minutes.
+- `commit-narration-current.txt` — exact transcript for the current narration and YouTube captions.
+- `commit-narration.mp3` / `commit-narration.txt` — retired narration references from the older interface; do not use them in the final video.
 - `empty-state.png` — initial review surface.
 - `policy-blocked.png` — actual WebMCP policy block at 13% gross margin.
 - `proposed-review.png` — staged change-set review.
@@ -16,3 +17,5 @@
 The application captures were taken from a production build of Commit on 2026-08-26. The WebMCP behavior itself was separately re-verified in Codex’s WebMCP-capable in-app browser after the redesign. Do not present these older captures as the final submission media; the recording runbook and script now target the current deployed UI.
 
 The final capture must come from release `a568849` / Cloudflare deployment `fefb0cb2`. Its unmistakable first functional state is the white policy-result card showing `$80 → 13% → Blocked`; any media without that card is from a retired interface.
+
+Regenerate the current narration reproducibly with `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/generate-demo-narration.ps1` if its transcript or timing changes.

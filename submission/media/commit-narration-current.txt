@@ -1,0 +1,15 @@
+Agents can now operate web apps, but there is a control problem. Approving every small action creates fatigue. Giving an agent direct access to make dozens of changes creates risk.
+
+Commit is Git for agent actions on the web. Agents stage. Humans steer. Web apps commit.
+
+In this merchant workspace, a WebMCP agent reads product metrics, inventory, and policies. It builds a clearance plan in shadow state: price changes, featured placements, and a weekend campaign. None of these changes are live yet.
+
+The agent first proposes a price that would break the store's 25 percent gross-margin rule. Commit returns a structured block. The agent corrects the price, and deterministic validation—not model judgment—clears the plan.
+
+Now the human steers the same change set. They raise one proposed price. That increments the revision, invalidates any prior approval, and the agent can read the updated state before asking to commit.
+
+Approval is bound to this exact revision. Once the human approves, the agent can commit the complete plan atomically. The canonical catalog and campaign state change together.
+
+Every commit leaves a concise audit record with the actor, revision, time, and diff. If the latest commit needs to be undone, rollback is staged as a new reviewable change set and requires another human approval.
+
+Commit lets agents collaborate safely at a higher level of abstraction: stage the work, steer the outcome, and commit with confidence.

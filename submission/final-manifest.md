@@ -13,6 +13,7 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 - Current production deployment: https://fefb0cb2.commit-webmcp.pages.dev
 - License: MIT
 - Demo master: **not yet recorded from the current Shadcn build**. The existing `submission/media/commit-demo.mp4` is retired reference footage and must not be uploaded.
+- Current narration: `submission/media/commit-narration-current.wav` (2:34.37, offline English speech, transcript included).
 - Video URL: pending YouTube upload
 - Devpost URL: pending Devpost login and draft creation
 - Verified deadline: September 3, 2026, 1:00 PM Pacific / 22:00 CEST
