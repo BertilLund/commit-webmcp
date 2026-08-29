@@ -25,7 +25,7 @@ Every tool shares the same domain functions as the UI. Tool activity is only sho
 3. Select **Stage an unsafe price**. The real transaction engine proposes `$80`, calculates a 13% margin, and visibly blocks it against the 25% store policy while the canonical store remains untouched.
 4. Select **Correct to $109 and build the plan**. The same domain functions used by WebMCP create the 13-change shadow transaction. The telemetry and price vectors update from actual staged state.
 5. Select **Approve this plan**, then **Apply these changes** to atomically update the store. Expand **Inspect 13 changes** to edit a proposed price and invalidate the old approval first.
-5. After commit, select **See the audit record** to inspect the live transaction or create a separately approved rollback plan.
+6. After commit, select **See the audit record** to inspect the live transaction or create a separately approved rollback plan.
 
 The deterministic browser walkthrough runs the real policy, shadow-state, approval, commit, audit, and rollback engine. It does not pretend its clicks are WebMCP activity; **Real WebMCP calls only** is populated exclusively by compatible-agent tool execution.
 
@@ -34,6 +34,10 @@ The deterministic browser walkthrough runs the real policy, shadow-state, approv
 ```bash
 npm install
 npm run dev
+```
+
+```bash
+npm run lint
 ```
 
 ```bash
@@ -48,7 +52,7 @@ The demo state is browser-local and includes **Reset demo** for a clean workspac
 
 ## Verification evidence
 
-`npm run test` runs eight checks: four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback; two interaction tests that click through the actual review UI; and two browser-tool tests that verify all 15 WebMCP registrations, strict schemas, structured policy feedback, and approval-gated commit behavior through the real callback wrapper.
+`npm run test` runs ten checks: four transaction-engine checks for hard policy blocking, approval invalidation after a human edit, atomic commit/audit persistence, and safe rollback; three interaction tests that click through policy recovery, human revision, atomic commit, and full rollback; two browser-tool tests that verify all 15 WebMCP registrations, strict schemas, structured policy feedback, and approval-gated commit behavior through the real callback wrapper; and one axe accessibility audit across the landing and blocked-policy states. Color contrast is manually ensured by the black/white design because jsdom cannot compute that rule reliably.
 
 The deployed app was tested on 2026-08-26 in Codex's WebMCP-capable in-app browser. Tool discovery exposed all 15 declared tools. The test staged a deliberately invalid $80 price for the Aster Field Jacket (blocked by the 25% gross-margin rule), corrected it to $109, staged a campaign and feature placement, then manually adjusted the shared price to $115 in the UI. The agent read the human revision, requested approval for revision 8, and committed only after the UI approval. The audit entry was created and `reset_demo` restored version 12 with no active change set. No browser console errors or warnings were observed.
 

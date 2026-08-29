@@ -1,4 +1,5 @@
 const USD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+export const WEBMCP_TOOL_COUNT = 15;
 export const fmt = (value) => USD.format(value);
 export const pct = (value) => `${Math.round(value * 100)}%`;
 const uid = (prefix) => `${prefix}_${Math.random().toString(36).slice(2, 8)}`;
@@ -21,6 +22,8 @@ export const fresh = () => ({
 let state;
 try { state = JSON.parse(localStorage.commitDemo) || fresh(); } catch { state = fresh(); }
 if (!Array.isArray(state.campaigns)) state.campaigns = [];
+if (!Array.isArray(state.activity)) state.activity = [];
+state.activity = state.activity.map((item) => ({ ...item, id: item.id || uid('evt') }));
 const listeners = new Set();
 const persist = () => { try { localStorage.commitDemo = JSON.stringify(state); } catch { /* demo remains usable when storage is unavailable */ } };
 const emit = () => { persist(); listeners.forEach((listener) => listener()); };
@@ -31,8 +34,9 @@ export const grossMargin = (product, price = product.price) => (price - product.
 
 export function shadowProducts() {
   const products = structuredClone(state.products);
+  const byId = new Map(products.map((product) => [product.id, product]));
   for (const change of state.changeset?.changes || []) {
-    const product = products.find((entry) => entry.id === change.entityId);
+    const product = byId.get(change.entityId);
     if (product && change.type === 'price') product.price = change.after.price;
     if (product && change.type === 'feature') product.featured = change.after.featured;
   }
@@ -41,7 +45,7 @@ export function shadowProducts() {
 
 export function resetDemo() { state = fresh(); emit(); return { status: 'reset', storeVersion: state.version }; }
 export function audit(tool, kind, detail, outcome = 'success') {
-  state.activity.unshift({ tool, kind, detail, outcome, at: now() });
+  state.activity.unshift({ id: uid('evt'), tool, kind, detail, outcome, at: now() });
   state.activity = state.activity.slice(0, 9);
   emit();
 }
@@ -181,7 +185,7 @@ export function registerWebMCP() {
   const register = (name, description, inputSchema, kind, action) => modelContext.registerTool({ name, description, inputSchema, execute(input) { try { const result = action(input || {}); audit(name, kind, kind === 'read' ? 'Read canonical/shared state' : 'Updated staged change set'); return response(result); } catch (error) { audit(name, kind, error.message, 'error'); return response({ status: 'error', message: error.message }); } } }).catch(() => {});
   const none = { type: 'object', properties: {}, additionalProperties: false };
   register('get_store_summary', 'Read canonical store health, current version, active change-set state, and high-level merchandising signals.', none, 'read', () => ({ storeVersion: state.version, products: state.products.length, campaigns: state.campaigns.length, activeChangeSet: state.changeset && { id: state.changeset.id, status: state.changeset.status, revision: state.changeset.revision } }));
-  register('list_products', 'Read product metrics needed to identify clearance opportunities.', { type: 'object', properties: { seller: { type: 'string', enum: ['slow', 'steady', 'strong'] } }, additionalProperties: false }, 'read', ({ seller }) => ({ products: state.products.filter((product) => !seller || product.seller === seller).map((product) => ({ ...product, margin: grossMargin(product) })) }));
+  register('list_products', 'Read product metrics needed to identify clearance opportunities.', { type: 'object', properties: { seller: { type: 'string', enum: ['slow', 'steady', 'strong'] } }, additionalProperties: false }, 'read', ({ seller }) => ({ products: state.products.flatMap((product) => (!seller || product.seller === seller ? [{ ...product, margin: grossMargin(product) }] : [])) }));
   register('get_store_policies', 'Read deterministic guardrails applied to every staged change and atomic commit.', none, 'read', () => ({ minimumGrossMargin: .25, maximumReduction: .5, strongSellerDiscounts: 'blocked', invalidPrices: 'blocked' }));
   register('begin_changeset', 'Create a new isolated change set. This never mutates canonical store.', { type: 'object', properties: { title: { type: 'string' }, goal: { type: 'string' } }, required: ['title', 'goal'], additionalProperties: false }, 'stage', beginChangeset);
   register('stage_price_change', 'Stage a product price in shadow state until human approval and commit.', { type: 'object', properties: { productId: { type: 'string' }, newPrice: { type: 'number' }, reason: { type: 'string' } }, required: ['productId', 'newPrice'], additionalProperties: false }, 'stage', stagePriceChange);

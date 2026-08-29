@@ -8,6 +8,7 @@
   body { @apply m-0 min-w-80 bg-black text-white antialiased; letter-spacing: 0.02em; }
   button, input { font: inherit; }
   button { @apply cursor-pointer; }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 }
 
 .spx-display {

@@ -19,8 +19,11 @@ Status: **pre-submission — final links pending upload and Devpost draft**
 
 ## Verification record
 
-- `npm run test` succeeds (9 tests: 4 transaction-engine tests, three human interaction flows including full rollback, and two WebMCP browser-tool callback tests).
+- `npm run lint` succeeds with zero warnings.
+- `npm run test` succeeds (10 tests: 4 transaction-engine tests, three human interaction flows including full rollback, two WebMCP browser-tool callback tests, and one primary-flow accessibility audit).
 - `npm run build` succeeds.
+- `npm audit` reports 0 known vulnerabilities.
+- React Doctor reports 100/100 with no findings.
 - The live URL returned HTTP 200 on public verification.
 - The public GitHub repository was verified as non-private with `main` default branch and an MIT license.
 - A full real-client WebMCP run is documented in `docs/webmcp-real-client-test.md`.

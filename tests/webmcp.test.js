@@ -22,6 +22,7 @@ beforeEach(async () => {
 describe('WebMCP browser tool layer', () => {
   test('registers the complete strict tool surface', () => {
     expect(domain.registerWebMCP()).toBe(true);
+    expect(domain.WEBMCP_TOOL_COUNT).toBe(tools.length);
     expect(tools.map((tool) => tool.name)).toEqual([
       'get_store_summary', 'list_products', 'get_store_policies', 'begin_changeset',
       'stage_price_change', 'stage_featured_product', 'stage_campaign', 'list_campaigns',

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
@@ -7,4 +6,4 @@ const badgeVariants = cva('inline-flex items-center rounded border px-2 py-0.5 t
   defaultVariants: { variant: 'outline' },
 });
 function Badge({ className, variant, ...props }) { return <div className={cn(badgeVariants({ variant }), className)} {...props} />; }
-export { Badge, badgeVariants };
+export { Badge };
